@@ -15,7 +15,7 @@ WORKDIR /app
 FROM base AS build
 ARG NX_CLOUD_ACCESS_TOKEN
 
-COPY .npmrc package.json pnpm-lock.yaml ./
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY ./tools/prisma /app/tools/prisma
 RUN pnpm install --frozen-lockfile
 
@@ -31,7 +31,7 @@ ARG NX_CLOUD_ACCESS_TOKEN
 
 RUN apt update && apt install -y dumb-init --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=node:node --from=build /app/.npmrc /app/package.json /app/pnpm-lock.yaml ./
+COPY --chown=node:node --from=build /app/.npmrc /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --chown=node:node --from=build /app/dist ./dist
